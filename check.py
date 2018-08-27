@@ -13,7 +13,7 @@ class CheckInPage(tk.Frame):
         tk.Frame.__init__(self, master)
 
         img = tk.PhotoImage(file='./assets/config.png')
-        btn_config = tk.Button(self, image=img)
+        btn_config = tk.Button(self, image=img, command=)
         btn_config.image = img
 
         #Parte para desplegar el tiempo y irlo actualizando cada medio segundo
@@ -25,10 +25,20 @@ class CheckInPage(tk.Frame):
         lbl_timer = tk.Label(self, text='', font=('Helvetica', 60), anchor='center')
         UpdateTime()
 
+        lbl_feedback = tk.Label(self, text='', font=('Helvetica', 40), pady=60, fg='red')
+
         def readFinger():
             btn_entrada.grid_forget()
-            print('hola mundo')
-            reader.readFinger()
+            lbl_feedback.configure(text='Esperando huella digital...')
+            lbl_feedback.grid(row=2, column=1)
+            recognized = reader.FingerReader.ReadFinger(self)
+            if(recognized):
+                lbl_feedback.configure(text='Hector Ramirez')
+                lbl_feedback.update()
+                time.sleep(2)
+            lbl_feedback.grid_forget()
+            btn_entrada.grid(row=2, column=1)
+
 
 
 
