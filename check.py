@@ -13,7 +13,7 @@ class CheckInPage(tk.Frame):
         tk.Frame.__init__(self, master)
 
         img = tk.PhotoImage(file='./assets/config.png')
-        btn_config = tk.Button(self, image=img, command=)
+        btn_config = tk.Button(self, image=img, command= lambda: master.switch_frame(master.PageTwo))
         btn_config.image = img
 
         #Parte para desplegar el tiempo y irlo actualizando cada medio segundo
