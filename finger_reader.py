@@ -1,14 +1,58 @@
-import time
-import threading
+# try:
+#     import hashlib
+#     from pyfingerprint.pyfingerprint import PyFingerprint
+# except:
+#     pass
 
-class FingerReader:
+import sqlite3
 
-    def ReadFinger(self):
-        time_out = 2
-        timer = 0
+# try:
+#     f = PyFingerprint('/dev/ttyUSB0', 57600, 0xFFFFFFFF, 0x00000000)
+#
+#     if (f.verifyPassword() == False):
+#         raise ValueError('The given fingerprint sensor password is wrong!')
+#
+#     ##Ya que ya inicializo el sensor
+#     ##Intentamos leer el dedo
+#     try:
+#
+#         ##Esperamos a que el usuario ponga el dedo
+#         while(f.readImage() == False):
+#             pass
+#
+#         ##Convertimos la imagen del dedo a caracteristicas para poder leerlo
+#         f.convertImage(0x01)
+#
+#         ##Buscamos si ya existe el dedo en la base de datos
+#         result = f.searchTemplate()
+#
+#         positionNumber = result[0]
+#         accuracyScore = result[1]
+#
+#         ##En caso que el dedo no exista indicarlo
+#         print('Usuario: ' + positionNumber)
+#
+#
+# except Exception as e:
+#     print('The fingerprint sensor could not be initialized!')
+#     print('Exception message: ' + str(e))
+#     #exit(1)
 
-        while(timer < time_out):
-            timer += 1
-            time.sleep(1)
+class CheckUser:
 
-        return True
+    def __init__(self):
+        self.conn = sqlite3.connect('./DB/reloj_checador.db')
+        self.c = self.conn.cursor()
+
+    def check_name(self, name):
+        self.c.execute('SELECT * FROM Users WHERE name=?', (name,))
+        user = self.c.fetchone()
+
+        if user != None:
+            return user[1]
+        else:
+            return 'error'
+
+    def close_connection(self):
+        self.c.close()
+        self.conn.close()

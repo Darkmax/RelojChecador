@@ -5,16 +5,16 @@ except:
     import Tkinter as tk   #python 2
     import tkFont as tkfont    #python 2
 
-import time
 import check
-import finger_reader as reader
 
 class RelojChecador(tk.Tk):
+
+    _frame = None
+
     def __init__(self):
         tk.Tk.__init__(self)
-        self._frame = None
         self.geometry('700x400')
-        self.switch_frame(check.CheckInPage)
+        self.switch_frame(check.CheckInPage) #show first frame
 
     def switch_frame(self, frame_class):
         """Destroys current frame and replaces it with a new one."""
@@ -23,7 +23,6 @@ class RelojChecador(tk.Tk):
             self._frame.destroy()
         self._frame = new_frame
         self._frame.pack()
-
 
 # class CheckInPage(tk.Frame):
 #     def __init__(self, master):
@@ -40,7 +39,6 @@ class RelojChecador(tk.Tk):
 #         page_1_button.pack()
 #         page_2_button.pack()
 
-
 class PageOne(tk.Frame):
     def __init__(self, master):
         tk.Frame.__init__(self, master)
@@ -51,7 +49,6 @@ class PageOne(tk.Frame):
         page_1_label.pack(side="top", fill="x", pady=10)
         start_button.pack()
 
-
 class PageTwo(tk.Frame):
     def __init__(self, master):
         tk.Frame.__init__(self, master)
@@ -61,7 +58,6 @@ class PageTwo(tk.Frame):
                                  command=lambda: master.switch_frame(check.CheckInPage))
         page_2_label.pack(side="top", fill="x", pady=10)
         start_button.pack()
-
 
 if __name__ == "__main__":
     app = RelojChecador()
