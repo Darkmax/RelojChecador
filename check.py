@@ -36,7 +36,7 @@ class CheckInPage(tk.Frame):
 
 
         #Poniendo los widgets en la ventana
-        btn_config.grid()
+        btn_config.grid(row=0, column=0)
         lbl_timer.grid(row=1, column=1)
         self.btn_entrada.grid(row=2, column=1)
 
@@ -57,3 +57,9 @@ class CheckInPage(tk.Frame):
         result = r.check_name('Hector')
         r.close_connection()
         self.lbl_feedback.configure(text='Bienvenido: ' + result)
+        self.lbl_feedback.after(2000, self.restore_button)
+
+    def restore_button(self):
+        self.lbl_feedback.configure(text='')
+        self.lbl_feedback.grid_forget()
+        self.btn_entrada.grid(row=2, column=1)
