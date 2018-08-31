@@ -10,6 +10,8 @@ import finger_reader as reader
 
 class CheckInPage(tk.Frame):
 
+    counter = 5000
+
     def __init__(self, master):
         tk.Frame.__init__(self, master)
         self.construct_gui()
@@ -52,25 +54,34 @@ class CheckInPage(tk.Frame):
         self.lbl_feedback.configure(text='Esperando huella digital...')
         self.lbl_feedback.grid(row=2, column=1) #Mostrando el label en pantalla
         ##Buscamos usuario
-        r = reader.CheckUser() #inicializo la clase, prendo el sensor
-        result = r.check_name('Hector') #mando llamar al metodo para checar la huella digital
+        CheckInPage.counter = 5000
+        self.r = reader.CheckUser() #inicializo la clase, prendo el sensor
+        self.wait_user()
 
-        #checo si ya leyo una huella digital
-            #si ya leyo la huella
-                #obtengo el usuario nombre completo
-            #si no ha leido la hueya digital
-                #decremento el contador general
+    def wait_user(self):
 
-        #checo si ya estuvo mucho tiempo prendido el sensor con el contador general
-        #apago el sensor
-            #y vuelvo a la pantalla principal
+        result = self.r.check_user() #leyendo hueya digital
+        
+        if result[0]:
+            CheckInPage.counter = 0
+            ##Ya leyo la huella digital
+            if result[1] >= 0:
+                self.lbl_feedback.configure(text='Bienvenido: ' + result[2])
+                self.lbl_feedback.after(2000, self.restore_button)
+            else:
+                self.lbl_feedback.configure(text='Error: Huella no encontrada')
+                self.lbl_feedback.after(2000, self.restore_button)
+        else:
+            CheckInPage.counter -= 100
+            if CheckInPage.counter > 0:
+                self.after(100, self.wait_user)
+            else:
+                self.lbl_feedback.configure(text='Error: se acabo el tiempo')
+                self.lbl_feedback.after(2000, self.restore_button)
 
-        r.close_connection()
-
-        self.lbl_feedback.configure(text='Bienvenido: ' + result)
-        self.lbl_feedback.after(2000, self.restore_button)
 
     def restore_button(self):
+        del(self.r)
         self.lbl_feedback.configure(text='')
         self.lbl_feedback.grid_forget()
         self.btn_entrada.grid(row=2, column=1)

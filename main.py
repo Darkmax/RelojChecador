@@ -14,7 +14,7 @@ class RelojChecador(tk.Tk):
     def __init__(self):
         tk.Tk.__init__(self)
         self.geometry('700x400')
-        self.switch_frame(check.CheckInPage) #show first frame
+        self.switch_frame(checkin_page.CheckInPage) #show first frame
 
     def switch_frame(self, frame_class):
         """Destroys current frame and replaces it with a new one."""
@@ -45,7 +45,7 @@ class PageOne(tk.Frame):
 
         page_1_label = tk.Label(self, text="This is page one")
         start_button = tk.Button(self, text="Return to start page",
-                                 command=lambda: master.switch_frame(check.CheckInPage))
+                                 command=lambda: master.switch_frame(checkin_page.CheckInPage))
         page_1_label.pack(side="top", fill="x", pady=10)
         start_button.pack()
 
