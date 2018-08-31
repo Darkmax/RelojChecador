@@ -44,14 +44,25 @@ class CheckUser:
         self.conn = sqlite3.connect('./DB/reloj_checador.db')
         self.c = self.conn.cursor()
 
+        # try:
+        #     f = PyFingerprint('/dev/ttyUSB0', 57600, 0xFFFFFFFF, 0x00000000)
+        #     if (f.verifyPassword() == False):
+        #         raise ValueError('The given fingerprint sensor password is wrong!')
+        # except Exception as e:
+        #     print('The fingerprint sensor could not be initialized!')
+        #     print('Exception message: ' + str(e))
+
     def check_name(self, name):
         self.c.execute('SELECT * FROM Users WHERE name=?', (name,))
         user = self.c.fetchone()
 
-        if user != None:
+        if user is not None:
             return user[1]
         else:
             return 'error'
+
+    def check_user(self, tk):
+        pass
 
     def close_connection(self):
         self.c.close()

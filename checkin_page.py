@@ -51,11 +51,22 @@ class CheckInPage(tk.Frame):
         self.btn_entrada.grid_forget() #Quitando de pantalla el boton
         self.lbl_feedback.configure(text='Esperando huella digital...')
         self.lbl_feedback.grid(row=2, column=1) #Mostrando el label en pantalla
-
         ##Buscamos usuario
-        r = reader.CheckUser()
-        result = r.check_name('Hector')
+        r = reader.CheckUser() #inicializo la clase, prendo el sensor
+        result = r.check_name('Hector') #mando llamar al metodo para checar la huella digital
+
+        #checo si ya leyo una huella digital
+            #si ya leyo la huella
+                #obtengo el usuario nombre completo
+            #si no ha leido la hueya digital
+                #decremento el contador general
+
+        #checo si ya estuvo mucho tiempo prendido el sensor con el contador general
+        #apago el sensor
+            #y vuelvo a la pantalla principal
+
         r.close_connection()
+
         self.lbl_feedback.configure(text='Bienvenido: ' + result)
         self.lbl_feedback.after(2000, self.restore_button)
 

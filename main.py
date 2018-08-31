@@ -5,7 +5,7 @@ except:
     import Tkinter as tk   #python 2
     import tkFont as tkfont    #python 2
 
-import check
+import checkin_page
 
 class RelojChecador(tk.Tk):
 
