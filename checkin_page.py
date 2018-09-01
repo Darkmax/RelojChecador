@@ -7,6 +7,7 @@ except:
 
 import time
 import finger_reader as reader
+import keypad_page as keypad
 
 class CheckInPage(tk.Frame):
 
@@ -21,7 +22,7 @@ class CheckInPage(tk.Frame):
         '''Metodo para construir la interfaz de la ventana'''
         #Boton de configuraciones
         img = tk.PhotoImage(file='./assets/config.png')
-        btn_config = tk.Button(self, image=img)
+        btn_config = tk.Button(self, image=img, command= lambda : self.master.switch_frame(keypad.KeypadPage))
         btn_config.image = img
 
         #Label para mostrar el tiempo
