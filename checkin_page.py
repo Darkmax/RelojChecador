@@ -13,6 +13,13 @@ class CheckInPage(tk.Frame):
 
     counter = 5000
 
+    font36 = "-family Arial -size 36 -weight bold -slant roman " \
+             "-underline 0 -overstrike 0"
+    font40 = "-family {Arial Black} -size 40 -weight bold -slant " \
+             "roman -underline 0 -overstrike 0"
+    font48 = "-family {Arial Black} -size 48 -weight bold -slant " \
+             "roman -underline 0 -overstrike 0"
+
     def __init__(self, master):
         tk.Frame.__init__(self, master)
         self.construct_gui()
@@ -22,38 +29,44 @@ class CheckInPage(tk.Frame):
         '''Metodo para construir la interfaz de la ventana'''
         #Boton de configuraciones
         img = tk.PhotoImage(file='./assets/config.png')
-        btn_config = tk.Button(self, image=img, command= lambda : self.master.switch_frame(keypad.KeypadPage))
+        btn_config = tk.Button(self, image=img, padx=80, command=lambda: self.master.switch_frame(keypad.KeypadPage))
         btn_config.image = img
 
+        #Label para mostrar el dia
+        lbl_date = tk.Label(self, font=self.font40)
+
         #Label para mostrar el tiempo
-        lbl_timer = tk.Label(self, font=('Helvetica', 40), anchor='center')
-        self.update_time(lbl_timer)
+        lbl_timer = tk.Label(self, font=self.font40)
+        self.update_time(lbl_date,lbl_timer)
 
         #Label de retro-alimentacion
-        self.lbl_feedback = tk.Label(self, font=('Helvetica', 40), pady=60, fg='red')
+        self.lbl_feedback = tk.Label(self, font=self.font36, pady=60, fg='red')
 
         #Boton para checkin
-        self.btn_entrada = tk.Button(self, text='Entrada', font=('Helvetica', 60),
+        self.btn_entrada = tk.Button(self, text='Entrada', font=self.font48,
                                 foreground='white', background='green'
-                                ,activebackground='green2', anchor=tk.CENTER, command=self.read_finger)
+                                ,activebackground='green2', command=self.read_finger)
 
 
         #Poniendo los widgets en la ventana
-        btn_config.grid(row=0, column=0)
-        lbl_timer.grid(row=1, column=1)
-        self.btn_entrada.grid(row=2, column=1)
+        btn_config.place(relx=0.0, rely=0.0, height=78, width=78)
+        lbl_date.place(relx=0.16, rely=0.05, height=101, width=284)
+        lbl_timer.place(relx=0.57, rely=0.05, height=101, width=284)
+        self.btn_entrada.place(relx=0.03, rely=0.38, height=224, width=657)
 
-    def update_time(self, label):
+    def update_time(self, lbl_date, lbl_time):
         '''Metodo para obtener el tiempo del sistema operativo'''
+        date_string = time.strftime('%d/%m/') + time.strftime('%Y')[2::]
         time_string = time.strftime('%H:%M:%S')
-        label.config(text=time_string)
-        self.after(500, self.update_time, label)
+        lbl_date.config(text=date_string)
+        lbl_time.config(text=time_string)
+        self.after(500, self.update_time, lbl_date, lbl_time)
 
     def read_finger(self):
         '''Metodo para leer la huella digital de un usuario'''
-        self.btn_entrada.grid_forget() #Quitando de pantalla el boton
+        self.btn_entrada.place_forget() #quitando de pantalla el boton
         self.lbl_feedback.configure(text='Esperando huella digital...')
-        self.lbl_feedback.grid(row=2, column=1) #Mostrando el label en pantalla
+        self.lbl_feedback.place(relx=0.03, rely=0.38, height=231, width=664)
         ##Buscamos usuario
         CheckInPage.counter = 5000
         self.r = reader.CheckUser() #inicializo la clase, prendo el sensor
@@ -84,5 +97,5 @@ class CheckInPage(tk.Frame):
     def restore_button(self):
         del(self.r)
         self.lbl_feedback.configure(text='')
-        self.lbl_feedback.grid_forget()
-        self.btn_entrada.grid(row=2, column=1)
+        self.lbl_feedback.place_forget()
+        self.btn_entrada.place(relx=0.03, rely=0.38, height=224, width=657)

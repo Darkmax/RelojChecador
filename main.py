@@ -13,7 +13,7 @@ class RelojChecador(tk.Tk):
 
     def __init__(self):
         tk.Tk.__init__(self)
-        self.geometry('700x400')
+        self.geometry('700x400+0+0')
         self.switch_frame(checkin_page.CheckInPage) #show first frame
 
     def switch_frame(self, frame_class):
@@ -22,27 +22,7 @@ class RelojChecador(tk.Tk):
         if self._frame is not None:
             self._frame.destroy()
         self._frame = new_frame
-        self._frame.pack()
-
-class PageOne(tk.Frame):
-    def __init__(self, master):
-        tk.Frame.__init__(self, master)
-
-        page_1_label = tk.Label(self, text="This is page one")
-        start_button = tk.Button(self, text="Return to start page",
-                                 command=lambda: master.switch_frame(checkin_page.CheckInPage))
-        page_1_label.pack(side="top", fill="x", pady=10)
-        start_button.pack()
-
-class PageTwo(tk.Frame):
-    def __init__(self, master):
-        tk.Frame.__init__(self, master)
-
-        page_2_label = tk.Label(self, text="This is page two")
-        start_button = tk.Button(self, text="Return to start page",
-                                 command=lambda: master.switch_frame(checkin_page.CheckInPage))
-        page_2_label.pack(side="top", fill="x", pady=10)
-        start_button.pack()
+        self._frame.place(relx=0.0, rely=0.0, relheight=1.0, relwidth=1.0)
 
 if __name__ == "__main__":
     app = RelojChecador()
