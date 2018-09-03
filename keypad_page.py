@@ -10,14 +10,12 @@ import checkin_page as check
 class KeypadPage(tk.Frame):
 
     keys = [
-        ['1','2','3'],
-        ['3','4','5'],
-        ['7','8','9'],
-        ['*','0','#'],
+        ['1','2','3','4','5'],
+        ['6','7','8','9','0'],
     ]
 
     arial20 = '-family Arial -size 20 -weight bold -slant roman'
-    arial40 = '-family Arial -size 40 -weight normal -slant roman'
+    arial40 = '-family Arial -size 40 -weight bold -slant roman'
 
     # create global variable for pin
     pin = ''  # empty string
@@ -30,14 +28,30 @@ class KeypadPage(tk.Frame):
 
     def construct_gui(self):
 
-        frm_top = tk.Frame(self, borderwidth='2', width=585)
-        frm_top.place(relx=0.0, rely=0.0, relheight=1.0, relwidth=1.0)
-
         img = tk.PhotoImage(file='./assets/arrow.png')
-        btn_back = tk.Button(self, image=img)
+        btn_back = tk.Button(self, image=img, command=lambda: self.master.switch_frame(check.CheckInPage))
         btn_back.image = img
-        btn_back.place(relx=0.01, rely=0.03, height=78, width=78)
+        btn_back.place(relx=0.01, rely=0.01, height=78, width=78)
 
+        self.lbl_pin = tk.Label(self, font=KeypadPage.arial40, text='****', background='white')
+        self.lbl_pin.place(relx=0.27, rely=0.08, height=90, width=314)
+
+        frame_keypad = tk.Frame(self)
+        frame_keypad.place(relx=0.03, rely=0.4, relheight=0.56, relwidth=0.95)
+
+        for y, row in enumerate(KeypadPage.keys, 0):
+            for x, key in enumerate(row):
+                b = tk.Button(frame_keypad, text=key, font=KeypadPage.arial20, command=lambda val=key:self.code(val))
+                posx = 0.02 + x * 0.16
+                posy = 0.04 + y * 0.49
+                print(str(posx) + '-' + str(posy) + ',' + str(x))
+                b.place(relx=posx, rely=posy, height=90, width=90)
+
+        btn_del = tk.Button(frame_keypad, text='<<', font=KeypadPage.arial20, background='red')
+        btn_del.place(relx=0.84, rely=0.04, height=90, width=90)
+
+        btn_del = tk.Button(frame_keypad, text='enter', font=KeypadPage.arial20, background='green')
+        btn_del.place(relx=0.84, rely=0.53, height=90, width=90)
 
     # #construyendo la interfaz de la ventana
     # def construct_gui(self):

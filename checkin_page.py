@@ -49,7 +49,7 @@ class CheckInPage(tk.Frame):
 
 
         #Poniendo los widgets en la ventana
-        btn_config.place(relx=0.0, rely=0.0, height=78, width=78)
+        btn_config.place(relx=0.01, rely=0.01, height=78, width=78)
         lbl_date.place(relx=0.16, rely=0.05, height=101, width=284)
         lbl_timer.place(relx=0.57, rely=0.05, height=101, width=284)
         self.btn_entrada.place(relx=0.03, rely=0.38, height=224, width=657)
