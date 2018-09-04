@@ -5,7 +5,7 @@ except:
     import Tkinter as tk   #python 2
     import tkFont as tkfont    #python 2
 
-import checkin_page as check
+import checkin_page as checkin
 
 class KeypadPage(tk.Frame):
 
@@ -29,7 +29,7 @@ class KeypadPage(tk.Frame):
     def construct_gui(self):
 
         img = tk.PhotoImage(file='./assets/arrow.png')
-        btn_back = tk.Button(self, image=img, command=lambda: self.master.switch_frame(check.CheckInPage))
+        btn_back = tk.Button(self, image=img, command=lambda: self.master.switch_frame(checkin.CheckInPage))
         btn_back.image = img
         btn_back.place(relx=0.01, rely=0.01, height=78, width=78)
 
