@@ -11,7 +11,7 @@ import keypad_page as keypad
 
 class CheckInPage(tk.Frame):
 
-    counter = 5000
+    counter = reader.CheckUser.getTimeRead()
 
     font36 = "-family Arial -size 36 -weight bold -slant roman " \
              "-underline 0 -overstrike 0"

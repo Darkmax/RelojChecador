@@ -23,6 +23,10 @@ class CheckUser:
     def __del__(self):
         self.close_connection()
 
+    def getTimeRead(self):
+        self.c.execute('SELECT finger_read_time FROM Configuration WHERE idConfig = 1')
+        return self.c.fetchone()[0]
+
     def get_user(self, finger_id):
         self.c.execute('SELECT * FROM Users WHERE index_finger=?', (finger_id,))
         user = self.c.fetchone()
