@@ -11,7 +11,7 @@ import keypad_page as keypad
 
 class CheckInPage(tk.Frame):
 
-    counter = reader.CheckUser.getTimeRead()
+    counter = 5000
 
     font36 = "-family Arial -size 36 -weight bold -slant roman " \
              "-underline 0 -overstrike 0"
@@ -68,8 +68,8 @@ class CheckInPage(tk.Frame):
         self.lbl_feedback.configure(text='Esperando huella digital...')
         self.lbl_feedback.place(relx=0.03, rely=0.38, height=231, width=664)
         ##Buscamos usuario
-        CheckInPage.counter = 5000
         self.r = reader.CheckUser() #inicializo la clase, prendo el sensor
+        CheckInPage.counter = self.r.getTimeRead()
         self.wait_user()
 
     def wait_user(self):

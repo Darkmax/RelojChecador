@@ -6,7 +6,7 @@ except:
     import tkFont as tkfont    #python 2
 
 import checkin_page as checkin
-
+import add_person_page as addPerson
 
 class AdminMenuPage(tk.Frame):
 
@@ -18,12 +18,12 @@ class AdminMenuPage(tk.Frame):
         self.construct_gui()
 
     def construct_gui(self):
-
+        '''Construct the gui of the admin menu page'''
         #Button back
         img = tk.PhotoImage(file='./assets/arrow.png')
         btn_back = tk.Button(self, image=img, command=lambda: self.master.switch_frame(checkin.CheckInPage))
         btn_back.image = img
-        btn_back.place(relx=0.0, rely=0.0, height=78, width=78)
+        btn_back.place(relx=0.01, rely=0.01, height=78, width=78)
 
         lbl_title = tk.Label(self, text='Elige una opción:', font=AdminMenuPage.arial40)
         lbl_title.place(relx=0.17, rely=0.05, height=91, width=484)
@@ -31,5 +31,5 @@ class AdminMenuPage(tk.Frame):
         btn_delUser = tk.Button(self, text='Remover\nPersona', font=AdminMenuPage.arial40, background='red', foreground='white', command=lambda: self.master.switch_frame())
         btn_delUser.place(relx=0.03, rely=0.33, height=250, width=300)
 
-        btn_addUser = tk.Button(self, text='Agregar\nPersona', font=AdminMenuPage.arial40, background='green', command=lambda: self.master.switch_frame())
+        btn_addUser = tk.Button(self, text='Agregar\nPersona', font=AdminMenuPage.arial40, background='green', command=lambda: self.master.switch_frame(addPerson.addPersonPage))
         btn_addUser.place(relx=0.54, rely=0.33, height=250, width=300)

@@ -7,14 +7,17 @@ except:
 
 import checkin_page
 
+import add_person_page as add
+
 class RelojChecador(tk.Tk):
 
     _frame = None
 
     def __init__(self):
         tk.Tk.__init__(self)
-        self.geometry('700x400+0+0')
-        self.switch_frame(checkin_page.CheckInPage) #show first frame
+        self.geometry('700x400+1100+600')
+        #self.switch_frame(checkin_page.CheckInPage) #show first frame
+        self.switch_frame(add.addPersonPage)
 
     def switch_frame(self, frame_class):
         """Destroys current frame and replaces it with a new one."""
