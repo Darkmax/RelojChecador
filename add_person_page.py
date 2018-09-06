@@ -1,3 +1,5 @@
+#!/usr/bin/env python
+# -*- coding: utf-8 -*-
 try:
     import tkinter as tk    #python 3
     from tkinter import font as tkfont  #python 3
@@ -5,6 +7,7 @@ except:
     import Tkinter as tk   #python 2
     import tkFont as tkfont    #python 2
 
+import time
 import admin_menu_page as admin_menu
 import finger_reader as reader
 
@@ -30,6 +33,11 @@ class addPersonPage(tk.Frame):
     ]
 
     mayus = False
+
+    timer = 5000
+
+    huella_actual = 0
+    huellas = [-1,-1]
 
     def __init__(self, master):
         tk.Frame.__init__(self, master)
@@ -72,23 +80,23 @@ class addPersonPage(tk.Frame):
         self.lbl_check_names.place(relx=0.93, rely=0.25, height=32, width=32)
 
         ##Finger print section
-        lbl_finger = tk.Label(self, text='Huella:', font=addPersonPage.arial20)
-        lbl_finger.place(relx=0.01, rely=0.43, height=40, width=124)
+        lbl_finger = tk.Label(self, text='Huella:', font=addPersonPage.arial20, justify=tk.LEFT)
+        lbl_finger.place(relx=0.01, rely=0.43, height=40, width=105)
 
-        btn_finger1 = tk.Button(self, text='#1', font=addPersonPage.arial16, command=lambda: self.addFinger(1))
-        btn_finger1.place(relx=0.2, rely=0.4, height=60, width=120)
+        btn_finger1 = tk.Button(self, text='#1', font=addPersonPage.arial16, command=lambda: self.addFinger(0))
+        btn_finger1.place(relx=0.16, rely=0.4, height=60, width=120)
 
-        lbl_check1 = tk.Label(self, image=self.img_error)
-        lbl_check1.place(relx=0.4, rely=0.43, height=32, width=32)
+        self.lbl_check1 = tk.Label(self, image=self.img_error)
+        self.lbl_check1.place(relx=0.35, rely=0.43, height=32, width=32)
 
-        btn_finger2 = tk.Button(self, text='#2', font=addPersonPage.arial16, command=lambda: self.addFinger(2))
-        btn_finger2.place(relx=0.49, rely=0.4, height=60, width=120)
+        btn_finger2 = tk.Button(self, text='#2', font=addPersonPage.arial16, command=lambda: self.addFinger(1))
+        btn_finger2.place(relx=0.44, rely=0.4, height=60, width=120)
 
-        lbl_check2 = tk.Label(self, image=self.img_error)
-        lbl_check2.place(relx=0.69, rely=0.43, height=32, width=32)
+        self.lbl_check2 = tk.Label(self, image=self.img_error)
+        self.lbl_check2.place(relx=0.64, rely=0.43, height=32, width=32)
 
-        self.lbl_status = tk.Label(self, font=addPersonPage.arial14, foreground='red')
-        self.lbl_status.place(relx=0.74, rely=0.4, height=60, width=174)
+        self.lbl_status = tk.Label(self, font=addPersonPage.arial14, foreground='red', justify=tk.LEFT)
+        self.lbl_status.place(relx=0.7, rely=0.4, height=60, width=190)
 
         frm_keyboard = tk.Frame(self, borderwidth='2', relief=tk.GROOVE)
         frm_keyboard.place(relx=0.01, rely=0.6, width=685, height=156)
@@ -96,7 +104,7 @@ class addPersonPage(tk.Frame):
         for y, row in enumerate(addPersonPage.keys, 0):
             for x, key in enumerate(row):
                 b = tk.Button(frm_keyboard, text=key, font=addPersonPage.arial12, background='grey', foreground='white', command=lambda val=key:self.code(val))
-                b.place(relx=(0.01 + x * 0.0761), rely=(0.06 + y * 0.33), height=42, width=42)
+                b.place(relx=(0.01 + x * 0.0761), rely=(0.025 + y * 0.33), height=42, width=42)
 
     def code(self, value):
         '''Method to handle the code of the keyboard'''
@@ -132,4 +140,57 @@ class addPersonPage(tk.Frame):
             self.lbl_check_names.configure(image=self.img_check)
 
     def addFinger(self, num):
-        print(num)
+        if self.huellas[num] == -1:
+            self.huella_actual = num
+            self.r = reader.CheckUser()
+            addPersonPage.timer = 10000
+            self.waitUser()
+        else:
+            self.lbl_status.configure(text='Huella #1 dada de alta')
+
+        self.r = reader.CheckUser()
+        addPersonPage.timer = 5000
+        self.waitUser()
+
+
+    def waitUser(self):
+        result = self.r.addFinger(1)
+
+        if result[0]:
+            ##Ya leyo el dedo y le pido que lo quite
+            addPersonPage.timer = 5000
+            self.lbl_status.configure(text='Remueve el dedo')
+            self.after(2000, self.waitUser2)
+        else:
+            ##Checar si leyo el dedo
+            if result[1] == 1:
+                ##No ha leido la huella digital
+                addPersonPage.timer -= 100
+                self.after(100, self.waitUser)
+            elif result[1] == -1:
+                #Ya leyo la huella digital pero ya existe
+                addPersonPage.timer = 0
+                self.lbl_status.configure(text='La huella digital ya existe')
+
+    def waitUser2(self):
+        self.lbl_status.configure(text='Pon otra vez el dedo')
+        result = self.r.addFinger(2)
+
+        if result[0]:
+            ##Ya leyo el dedo otra vez
+            self.timer = 0
+            if self.huella_actual == 1:
+                self.lbl_check1.configure(image=self.img_check)
+            else:
+                self.lbl_check2.configure(image=self.img_check)
+            self.lbl_status.configure(text='Huella dada de alta')
+            print(result[1])
+        else:
+            if result[1] == 1:
+                #no ha leido la huella digital por segunda vez
+                addPersonPage.timer -= 100
+                self.after(100, self.waitUser2)
+            else:
+                ##Error no es el mismo dedo
+                self.timer = 0
+                self.lbl_status.configure(text='No es el mismo dedo')

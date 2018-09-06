@@ -15,7 +15,7 @@ class RelojChecador(tk.Tk):
 
     def __init__(self):
         tk.Tk.__init__(self)
-        self.geometry('700x400+1100+600')
+        self.geometry('700x400+0+0')
         #self.switch_frame(checkin_page.CheckInPage) #show first frame
         self.switch_frame(add.addPersonPage)
 

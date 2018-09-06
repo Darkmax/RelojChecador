@@ -1,3 +1,5 @@
+#!/usr/bin/env python
+# -*- coding: utf-8 -*-
 try:
     import tkinter as tk    #python 3
     from tkinter import font as tkfont  #python 3

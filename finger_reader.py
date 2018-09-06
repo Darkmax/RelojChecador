@@ -55,7 +55,39 @@ class CheckUser:
                 return [True, -1]
 
     def addFinger(self, state):
-        print(state)
+
+        try:
+            if self.f.readImage() == False:
+                return [False, 1]
+            else:
+                if state == 1:
+                    self.f.convertImage(0x01)
+                    result=self.f.searchTemplate()
+                    positionNumber = result[0]
+
+                    if positionNumber >= 0:
+                        print('Template already exists')
+                        return [False, -1] ##return already exist
+                    else:
+                        print('primera captura bien')
+                        return [True, 1] ##ok capture first time
+                else:
+
+                    self.f.convertImage(0x02)
+
+                    if self.f.compareCharacteristics() == 0:
+                        print('no es el mismo dedo')
+                        return [False, 0] ##is not the same finger
+                    else:
+                        self.f.createTemplate()
+                        positionNumber = self.f.storeTemplate()
+                        print('Dado en la posicion: ' + str(positionNumber))
+                        return [True, positionNumber]
+
+        except Exception as e:
+            print('Exception message: ' + str(e))
+
+
 
     def close_connection(self):
         self.c.close()
