@@ -54,6 +54,9 @@ class CheckUser:
             else:
                 return [True, -1]
 
+    def addFinger(self, state):
+        print(state)
+
     def close_connection(self):
         self.c.close()
         self.conn.close()

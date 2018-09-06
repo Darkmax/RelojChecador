@@ -6,6 +6,7 @@ except:
     import tkFont as tkfont    #python 2
 
 import admin_menu_page as admin_menu
+import finger_reader as reader
 
 class addPersonPage(tk.Frame):
 
@@ -74,13 +75,13 @@ class addPersonPage(tk.Frame):
         lbl_finger = tk.Label(self, text='Huella:', font=addPersonPage.arial20)
         lbl_finger.place(relx=0.01, rely=0.43, height=40, width=124)
 
-        btn_finger1 = tk.Button(self, text='#1', font=addPersonPage.arial16)
+        btn_finger1 = tk.Button(self, text='#1', font=addPersonPage.arial16, command=lambda: self.addFinger(1))
         btn_finger1.place(relx=0.2, rely=0.4, height=60, width=120)
 
         lbl_check1 = tk.Label(self, image=self.img_error)
         lbl_check1.place(relx=0.4, rely=0.43, height=32, width=32)
 
-        btn_finger2 = tk.Button(self, text='#2', font=addPersonPage.arial16)
+        btn_finger2 = tk.Button(self, text='#2', font=addPersonPage.arial16, command=lambda: self.addFinger(2))
         btn_finger2.place(relx=0.49, rely=0.4, height=60, width=120)
 
         lbl_check2 = tk.Label(self, image=self.img_error)
@@ -110,6 +111,7 @@ class addPersonPage(tk.Frame):
                 temp = self.focus_get().get()[:-1]
                 self.focus_get().delete('0', 'end')
                 self.focus_get().insert(0, temp)
+                self.name_validation()
         else:
             key = value
             if addPersonPage.mayus:
@@ -120,11 +122,14 @@ class addPersonPage(tk.Frame):
 
             if self.focus_get() is not None:
                 self.focus_get().insert('end', key)
-                self.form_validation()
+                self.name_validation()
 
-    def form_validation(self):
+    def name_validation(self):
 
-        if (len(self.ent_name.get()) < 3) or (len(self.ent_lastname.get() < 3)):
+        if (len(self.ent_name.get()) < 3) or (len(self.ent_lastname.get()) < 3):
             self.lbl_check_names.configure(image=self.img_error)
         else:
             self.lbl_check_names.configure(image=self.img_check)
+
+    def addFinger(self, num):
+        print(num)
