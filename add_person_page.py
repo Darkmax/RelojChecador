@@ -36,7 +36,7 @@ class addPersonPage(tk.Frame):
 
     timer = 5000
 
-    huella_actual = 0
+    huella_actual = -1
     huellas = [-1,-1]
 
     def __init__(self, master):
@@ -179,10 +179,11 @@ class addPersonPage(tk.Frame):
         if result[0]:
             ##Ya leyo el dedo otra vez
             self.timer = 0
-            if self.huella_actual == 1:
+            if self.huella_actual == 0:
                 self.lbl_check1.configure(image=self.img_check)
             else:
                 self.lbl_check2.configure(image=self.img_check)
+
             self.lbl_status.configure(text='Huella dada de alta')
             print(result[1])
         else:
