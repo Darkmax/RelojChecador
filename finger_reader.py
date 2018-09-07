@@ -9,6 +9,7 @@ import sqlite3
 class CheckUser:
 
     def __init__(self):
+        '''Start the connection to the DB and init the drivers with the finger reader'''
         self.conn = sqlite3.connect('./DB/reloj_checador.db')
         self.c = self.conn.cursor()
 
@@ -24,10 +25,12 @@ class CheckUser:
         self.close_connection()
 
     def getTimeRead(self):
+        '''Get from the configuration the time that needs to be on the finger reader sensor'''
         self.c.execute('SELECT finger_read_time FROM Configuration WHERE idConfig = 1')
         return self.c.fetchone()[0]
 
     def get_user(self, finger_id):
+        '''Get user values of the DB'''
         self.c.execute('SELECT * FROM Users WHERE index_finger=?', (finger_id,))
         user = self.c.fetchone()
         if user is not None:
@@ -36,6 +39,7 @@ class CheckUser:
             return 'error'
 
     def addPerson(self, values):
+        '''Method to insert person on to the DB'''
         try:
             name = values[0]
             last_name = values[1]
@@ -45,11 +49,13 @@ class CheckUser:
             self.c.execute(query, name, last_name, index_finger, index_finger2)
             self.conn.commit() #insert values
 
+            return True
         except Exception as e:
             print('Exception message: ' + str(e))
+            return False
 
     def check_user(self):
-
+        '''Method to check user finger print on the stored templates'''
         ##si no leyo imagen regresar
         if self.f.readImage() == False:
             return [False, -1]
@@ -68,7 +74,7 @@ class CheckUser:
                 return [True, -1]
 
     def addFinger(self, state):
-
+        '''Method to add finger print to the store templates'''
         try:
             if self.f.readImage() == False:
                 return [False, 1]
@@ -100,6 +106,13 @@ class CheckUser:
         except Exception as e:
             print('Exception message: ' + str(e))
 
+    def deleteFinger(self, index):
+        try:
+            return self.f.deleteTemplate(index)
+        except Exception as e:
+            print('Exception message: ' + str(e))
+
     def close_connection(self):
+        '''Close connection to the DB'''
         self.c.close()
         self.conn.close()

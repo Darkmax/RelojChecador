@@ -35,13 +35,14 @@ class addPersonPage(tk.Frame):
 
     timer = 5000
 
-    huella_actual = -1
-    huellas = [-1,-1]
+    current_finger = -1
+    fingers = [-1,-1]
 
     def __init__(self, master):
         tk.Frame.__init__(self, master)
         self.img_error = tk.PhotoImage(file='./assets/error32.png')
         self.img_check = tk.PhotoImage(file='./assets/ok32.png')
+        self.r = reader.CheckUser()
         self.construct_gui()
 
     def construct_gui(self):
@@ -49,13 +50,13 @@ class addPersonPage(tk.Frame):
 
         ##Button back
         img = tk.PhotoImage(file='./assets/arrow.png')
-        btn_back = tk.Button(self, image=img, padx=80, command=lambda: self.master.switch_frame(admin_menu.AdminMenuPage))
+        btn_back = tk.Button(self, image=img, padx=80, command=self.back_to_menu)
         btn_back.image = img
         btn_back.place(relx=0.01, rely=0.01, height=78, width=78)
 
         ##Button add
-        btn_add = tk.Button(self, text='Agregar', font=addPersonPage.arial14, state=tk.DISABLED)
-        btn_add.place(relx=0.84, rely=0.03, height=60, width=100)
+        self.btn_add = tk.Button(self, text='Agregar', font=addPersonPage.arial14, state=tk.DISABLED, command=self.add_person)
+        self.btn_add.place(relx=0.84, rely=0.03, height=60, width=100)
 
         lbl_title = tk.Label(self, text='Creación de persona', font=addPersonPage.arial30)
         lbl_title.place(relx=0.125, rely=0.03, height=51, width=414)
@@ -107,8 +108,30 @@ class addPersonPage(tk.Frame):
 
         self.form_validation() ##call validation check
 
+    def back_to_menu(self):
+        '''Method to go back to admin menu, and if the user already submit a
+        finger print, it will delete the finger'''
+
+        ##check if the user already submit a finger print
+        if addPersonPage.fingers[0] >= 0:
+            value = self.r.deleteFinger(addPersonPage.fingers[0])
+            if value == False:
+                addPersonPage.fingers[0] = -1
+
+        if addPersonPage.fingers[1] >= 0:
+            value = self.r.deleteFinger(addPersonPage.fingers[1])
+            if value == False:
+                addPersonPage.fingers[1] = -1
+
+        del self.r #delete connection to the DB and sensor
+
+        ##Go back to admin menu
+        self.master.switch_frame(admin_menu.AdminMenuPage)
+
     def code(self, value):
-        '''Method to handle the code of the keyboard'''
+        '''Method to handle the code of the keyboard
+        Receive: the value of the keyboard'''
+
         if value == 'MAY':
             addPersonPage.mayus = not addPersonPage.mayus
         elif value == 'SPC':
@@ -133,17 +156,33 @@ class addPersonPage(tk.Frame):
 
     def form_validation(self):
         '''Method to check the validation of the form'''
+
+        flag_name = False
+        flag_finger = False
+
         if (len(self.ent_name.get()) < 3) or (len(self.ent_lastname.get()) < 3):
             self.lbl_check_names.configure(image=self.img_error)
+            flag_name = False
         else:
             self.lbl_check_names.configure(image=self.img_check)
+            flag_name = True
+
+        if addPersonPage.fingers[0] >= 0 and addPersonPage.fingers[1] >= 0:
+            flag_finger = True
+
+        if flag_name and flag_finger:
+            self.btn_add.configure(state=tk.NORMAL, background='green', foreground='white')
+        else:
+            self.btn_add.configure(state=tk.DISABLED, background='#d9d9d9', foreground='#a3a3a3')
 
         self.after(1500, self.form_validation) #recall every 1.5 seconds
 
     def addFinger(self, num):
-        if self.huellas[num] == -1:
-            self.huella_actual = num
-            self.r = reader.CheckUser()
+        '''Method to add a finger print
+        Receive: The number of which finger the user is adding'''
+
+        if addPersonPage.fingers[num] == -1:
+            addPersonPage.current_finger = num
             addPersonPage.timer = 10000
             self.waitUser()
         else:
@@ -181,12 +220,12 @@ class addPersonPage(tk.Frame):
             ##Ya leyo el dedo otra vez
             self.timer = 0
 
-            if self.huella_actual == 0:
+            if addPersonPage.current_finger == 0:
                 self.lbl_check1.configure(image=self.img_check)
             else:
                 self.lbl_check2.configure(image=self.img_check)
 
-            self.huellas[self.huella_actual] = result[1]
+            addPersonPage.fingers[addPersonPage.current_finger] = result[1]
             self.lbl_status.configure(text='Huella dada de alta')
             print(result[1])
         else:
@@ -198,3 +237,16 @@ class addPersonPage(tk.Frame):
                 ##Error no es el mismo dedo
                 self.timer = 0
                 self.lbl_status.configure(text='No es el mismo dedo')
+
+    def add_person(self):
+        '''Method to add the values of the form to the DB'''
+
+        name = self.ent_name.get()
+        last_name = self.ent_lastname.get()
+        result = self.r.addPerson([name,last_name, addPersonPage.fingers[0], addPersonPage.fingers[1]])
+
+        if result:
+            del self.r  # delete connection to the DB and sensor
+            self.master.switch_frame(admin_menu.AdminMenuPage)
+        else:
+            self.lbl_status.configure(text='Error:Al agregar persona')
