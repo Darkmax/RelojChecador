@@ -53,9 +53,9 @@ class KeypadPage(tk.Frame):
                 b = tk.Button(frame_keypad, text=key, font=KeypadPage.arial20, command=lambda val=key:self.code(val))
                 b.place(relx=(0.02 + x * 0.16), rely=(0.04 + y * 0.49), height=90, width=90)
                 if key == '<<':
-                    b.configure(background='red')
+                    b.configure(background='red', activebackground='orange red',)
                 elif key == 'enter':
-                    b.configure(background='green')
+                    b.configure(background='green', activebackground='green2')
 
     def getPassword(self):
         conn = sqlite3.connect('./DB/reloj_checador.db')

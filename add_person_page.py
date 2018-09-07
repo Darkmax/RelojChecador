@@ -8,7 +8,7 @@ except:
     import tkFont as tkfont    #python 2
 
 import admin_menu_page as admin_menu
-import finger_reader as reader
+import finger_reader as backend
 
 class addPersonPage(tk.Frame):
 
@@ -35,14 +35,13 @@ class addPersonPage(tk.Frame):
 
     timer = 5000
 
-    current_finger = -1
-    fingers = [-1,-1]
-
     def __init__(self, master):
         tk.Frame.__init__(self, master)
         self.img_error = tk.PhotoImage(file='./assets/error32.png')
         self.img_check = tk.PhotoImage(file='./assets/ok32.png')
-        self.r = reader.CheckUser()
+        self.r = backend.Backend()
+        self.fingers = [-1, -1]
+        self.current_finger = -1
         self.construct_gui()
 
     def construct_gui(self):
@@ -113,15 +112,17 @@ class addPersonPage(tk.Frame):
         finger print, it will delete the finger'''
 
         ##check if the user already submit a finger print
-        if addPersonPage.fingers[0] >= 0:
-            value = self.r.deleteFinger(addPersonPage.fingers[0])
-            if value == False:
-                addPersonPage.fingers[0] = -1
+        if self.fingers[0] >= 0:
+            print('Borrando huella: ' + str(self.fingers[0]))
+            value = self.r.deleteFinger(self.fingers[0])
+            if value:
+                self.fingers[0] = -1
 
-        if addPersonPage.fingers[1] >= 0:
-            value = self.r.deleteFinger(addPersonPage.fingers[1])
-            if value == False:
-                addPersonPage.fingers[1] = -1
+        if self.fingers[1] >= 0:
+            print('Borrando huella: ' + str(self.fingers[1]))
+            value = self.r.deleteFinger(self.fingers[1])
+            if value:
+                self.fingers[1] = -1
 
         del self.r #delete connection to the DB and sensor
 
@@ -167,11 +168,11 @@ class addPersonPage(tk.Frame):
             self.lbl_check_names.configure(image=self.img_check)
             flag_name = True
 
-        if addPersonPage.fingers[0] >= 0 and addPersonPage.fingers[1] >= 0:
+        if self.fingers[0] >= 0 and self.fingers[1] >= 0:
             flag_finger = True
 
         if flag_name and flag_finger:
-            self.btn_add.configure(state=tk.NORMAL, background='green', foreground='white')
+            self.btn_add.configure(state=tk.NORMAL, background='green', activebackground='green2', foreground='white')
         else:
             self.btn_add.configure(state=tk.DISABLED, background='#d9d9d9', foreground='#a3a3a3')
 
@@ -181,16 +182,13 @@ class addPersonPage(tk.Frame):
         '''Method to add a finger print
         Receive: The number of which finger the user is adding'''
 
-        if addPersonPage.fingers[num] == -1:
-            addPersonPage.current_finger = num
+        if self.fingers[num] == -1:
+            self.current_finger = num
             addPersonPage.timer = 10000
+            self.lbl_status.configure(text='Dedo en el sensor')
             self.waitUser()
         else:
-            self.lbl_status.configure(text='Huella ya dada de alta')
-
-        self.r = reader.CheckUser()
-        addPersonPage.timer = 5000
-        self.waitUser()
+            self.lbl_status.configure(text='Ya esta leido')
 
 
     def waitUser(self):
@@ -210,7 +208,7 @@ class addPersonPage(tk.Frame):
             elif result[1] == -1:
                 #Ya leyo la huella digital pero ya existe
                 addPersonPage.timer = 0
-                self.lbl_status.configure(text='La huella digital ya existe')
+                self.lbl_status.configure(text='La huella ya existe')
 
     def waitUser2(self):
         self.lbl_status.configure(text='Pon otra vez el dedo')
@@ -220,12 +218,12 @@ class addPersonPage(tk.Frame):
             ##Ya leyo el dedo otra vez
             self.timer = 0
 
-            if addPersonPage.current_finger == 0:
+            if self.current_finger == 0:
                 self.lbl_check1.configure(image=self.img_check)
             else:
                 self.lbl_check2.configure(image=self.img_check)
 
-            addPersonPage.fingers[addPersonPage.current_finger] = result[1]
+            self.fingers[self.current_finger] = result[1]
             self.lbl_status.configure(text='Huella dada de alta')
             print(result[1])
         else:
@@ -243,7 +241,7 @@ class addPersonPage(tk.Frame):
 
         name = self.ent_name.get()
         last_name = self.ent_lastname.get()
-        result = self.r.addPerson([name,last_name, addPersonPage.fingers[0], addPersonPage.fingers[1]])
+        result = self.r.addPerson([name,last_name, self.fingers[0], self.fingers[1]])
 
         if result:
             del self.r  # delete connection to the DB and sensor

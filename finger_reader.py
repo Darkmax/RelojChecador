@@ -6,7 +6,7 @@ except:
 
 import sqlite3
 
-class CheckUser:
+class Backend:
 
     def __init__(self):
         '''Start the connection to the DB and init the drivers with the finger reader'''
@@ -24,6 +24,15 @@ class CheckUser:
     def __del__(self):
         self.close_connection()
 
+    def getConfigurationTimeRange(self):
+        '''Returns the range of time where is considered checkin'''
+
+        self.c.execute('SELECT rango_entrada FROM Configuration WHERE idConfig = 1')
+        time_string = self.c.fetchone()[0]
+        return time_string.split(';')
+
+
+
     def getTimeRead(self):
         '''Get from the configuration the time that needs to be on the finger reader sensor'''
         self.c.execute('SELECT finger_read_time FROM Configuration WHERE idConfig = 1')
@@ -31,7 +40,8 @@ class CheckUser:
 
     def get_user(self, finger_id):
         '''Get user values of the DB'''
-        self.c.execute('SELECT * FROM Users WHERE index_finger=?', (finger_id,))
+        self.c.execute('SELECT * FROM Users WHERE index_finger=? or index_finger2=?',
+                       (finger_id, finger_id,))
         user = self.c.fetchone()
         if user is not None:
             return [user[0], user[1], user[2], user[3]]
@@ -46,7 +56,7 @@ class CheckUser:
             index_finger = values[2]
             index_finger2 = values[3]
             query = 'INSERT INTO Users (name, last_name, index_finger, index_finger2) VALUES (?, ?, ?, ?)'
-            self.c.execute(query, name, last_name, index_finger, index_finger2)
+            self.c.execute(query, (name, last_name, index_finger, index_finger2))
             self.conn.commit() #insert values
 
             return True
@@ -68,7 +78,8 @@ class CheckUser:
             ##Si encontro el usuario
             if accuracyScore >= 50:
                 user = self.get_user(positionNumber)
-                return [True] + user
+                print(user)
+                return [True,] + user
             ##No encontro el usuario
             else:
                 return [True, -1]
