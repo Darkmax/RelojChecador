@@ -35,6 +35,19 @@ class CheckUser:
         else:
             return 'error'
 
+    def addPerson(self, values):
+        try:
+            name = values[0]
+            last_name = values[1]
+            index_finger = values[2]
+            index_finger2 = values[3]
+            query = 'INSERT INTO Users (name, last_name, index_finger, index_finger2) VALUES (?, ?, ?, ?)'
+            self.c.execute(query, name, last_name, index_finger, index_finger2)
+            self.conn.commit() #insert values
+
+        except Exception as e:
+            print('Exception message: ' + str(e))
+
     def check_user(self):
 
         ##si no leyo imagen regresar
@@ -86,8 +99,6 @@ class CheckUser:
 
         except Exception as e:
             print('Exception message: ' + str(e))
-
-
 
     def close_connection(self):
         self.c.close()

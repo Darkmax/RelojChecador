@@ -7,7 +7,6 @@ except:
     import Tkinter as tk   #python 2
     import tkFont as tkfont    #python 2
 
-import time
 import admin_menu_page as admin_menu
 import finger_reader as reader
 
@@ -106,6 +105,8 @@ class addPersonPage(tk.Frame):
                 b = tk.Button(frm_keyboard, text=key, font=addPersonPage.arial12, background='grey', foreground='white', command=lambda val=key:self.code(val))
                 b.place(relx=(0.01 + x * 0.0761), rely=(0.025 + y * 0.33), height=42, width=42)
 
+        self.form_validation() ##call validation check
+
     def code(self, value):
         '''Method to handle the code of the keyboard'''
         if value == 'MAY':
@@ -119,7 +120,6 @@ class addPersonPage(tk.Frame):
                 temp = self.focus_get().get()[:-1]
                 self.focus_get().delete('0', 'end')
                 self.focus_get().insert(0, temp)
-                self.name_validation()
         else:
             key = value
             if addPersonPage.mayus:
@@ -130,14 +130,15 @@ class addPersonPage(tk.Frame):
 
             if self.focus_get() is not None:
                 self.focus_get().insert('end', key)
-                self.name_validation()
 
-    def name_validation(self):
-
+    def form_validation(self):
+        '''Method to check the validation of the form'''
         if (len(self.ent_name.get()) < 3) or (len(self.ent_lastname.get()) < 3):
             self.lbl_check_names.configure(image=self.img_error)
         else:
             self.lbl_check_names.configure(image=self.img_check)
+
+        self.after(1500, self.form_validation) #recall every 1.5 seconds
 
     def addFinger(self, num):
         if self.huellas[num] == -1:
@@ -146,7 +147,7 @@ class addPersonPage(tk.Frame):
             addPersonPage.timer = 10000
             self.waitUser()
         else:
-            self.lbl_status.configure(text='Huella #1 dada de alta')
+            self.lbl_status.configure(text='Huella ya dada de alta')
 
         self.r = reader.CheckUser()
         addPersonPage.timer = 5000
@@ -179,11 +180,13 @@ class addPersonPage(tk.Frame):
         if result[0]:
             ##Ya leyo el dedo otra vez
             self.timer = 0
+
             if self.huella_actual == 0:
                 self.lbl_check1.configure(image=self.img_check)
             else:
                 self.lbl_check2.configure(image=self.img_check)
 
+            self.huellas[self.huella_actual] = result[1]
             self.lbl_status.configure(text='Huella dada de alta')
             print(result[1])
         else:
