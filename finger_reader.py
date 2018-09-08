@@ -31,7 +31,15 @@ class Backend:
         time_string = self.c.fetchone()[0]
         return time_string.split(';')
 
+    def getExportPath(self):
+        '''Method to get path to save the csv files'''
 
+        try:
+            self.c.execute('SELECT path_export FROM Configuration WHERE idConfig = 1')
+            return self.c.fetchone()[0]
+        except Exception as e:
+            print('getExportPath method')
+            print('Exception message: ' + str(e))
 
     def getTimeRead(self):
         '''Get from the configuration the time that needs to be on the finger reader sensor'''

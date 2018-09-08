@@ -7,7 +7,7 @@ except:
 
 import checkin_page
 
-import add_person_page as add
+import delete_user as delete
 
 class RelojChecador(tk.Tk):
 
@@ -15,12 +15,13 @@ class RelojChecador(tk.Tk):
 
     def __init__(self):
         tk.Tk.__init__(self)
+        self.title('Reloj Checador')
         self.geometry('800x480+20+0')
-        self.attributes('-fullscreen', True)
+        #self.attributes('-fullscreen', True)
         self.bind('<Escape>', self.toggle_fullscreen)
 
-        self.switch_frame(checkin_page.CheckInPage) #show first frame
-        #self.switch_frame(add.addPersonPage)
+        #self.switch_frame(checkin_page.CheckInPage) # show first page
+        self.switch_frame(delete.DeleteUserPage)
 
     def switch_frame(self, frame_class):
         """Destroys current frame and replaces it with a new one."""

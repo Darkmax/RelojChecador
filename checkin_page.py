@@ -147,10 +147,12 @@ class CheckInPage(tk.Frame):
             date_string = now.strftime('%Y-%m-%d')
             time_string = now.strftime('%H%M%S')
             entrada = 'entrada' if CheckInPage.checkin else 'salida'
+            path = self.b.getExportPath()
+
 
             #construyo el nombre del archivo
             filename = date_string + 'T' + time_string + '_' + str(user[1]) + '.csv'
-            f = open('./entradas/' + filename, 'w')
+            f = open(path + filename, 'w')
 
             #escribiendo encabezado
             f.write('nombre;apellido;dia;tiempo;entrada/salida' + '\n')

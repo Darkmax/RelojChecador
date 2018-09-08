@@ -98,12 +98,12 @@ class addPersonPage(tk.Frame):
         self.lbl_status.place(relx=0.7, rely=0.4, height=60, width=190)
 
         frm_keyboard = tk.Frame(self, borderwidth='2', relief=tk.GROOVE)
-        frm_keyboard.place(relx=0.01, rely=0.6, width=685, height=156)
+        frm_keyboard.place(relx=0.01, rely=0.58, width=785, height=195)
 
         for y, row in enumerate(addPersonPage.keys, 0):
             for x, key in enumerate(row):
                 b = tk.Button(frm_keyboard, text=key, font=addPersonPage.arial12, background='grey', foreground='white', command=lambda val=key:self.code(val))
-                b.place(relx=(0.01 + x * 0.0761), rely=(0.025 + y * 0.33), height=42, width=42)
+                b.place(relx=(0.01 + x * 0.0761), rely=(0.03 + y * 0.33), height=50, width=50)
 
         self.form_validation() ##call validation check
 
