@@ -17,11 +17,11 @@ class RelojChecador(tk.Tk):
         tk.Tk.__init__(self)
         self.title('Reloj Checador')
         self.geometry('800x480+20+0')
-        #self.attributes('-fullscreen', True)
+        self.attributes('-fullscreen', True)
         self.bind('<Escape>', self.toggle_fullscreen)
 
-        #self.switch_frame(checkin_page.CheckInPage) # show first page
-        self.switch_frame(delete.DeleteUserPage)
+        self.switch_frame(checkin_page.CheckInPage) # show first page
+        #self.switch_frame(delete.DeleteUserPage)
 
     def switch_frame(self, frame_class):
         """Destroys current frame and replaces it with a new one."""

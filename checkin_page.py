@@ -64,7 +64,7 @@ class CheckInPage(tk.Frame):
         btn_config.place(relx=0.01, rely=0.01, height=78, width=78)
         lbl_date.place(relx=0.16, rely=0.05, height=101, width=284)
         lbl_timer.place(relx=0.57, rely=0.05, height=101, width=284)
-        self.btn_entrada.place(relx=0.08, rely=0.38, height=224, width=657)
+        self.btn_entrada.place(relx=0.09, rely=0.38, height=224, width=657)
 
     def update_time(self, lbl_date, lbl_time):
         '''Metodo para obtener el tiempo del sistema operativo'''
@@ -76,9 +76,12 @@ class CheckInPage(tk.Frame):
 
         # checo si necesito actualizar el boton
         morning_array = self.date_range[0].split(':')
-        evening_array = self.date_range[1].split(':')
         date_morning = datetime.datetime.now().replace(
             hour=int(morning_array[0]), minute=int(morning_array[1]), second=int(morning_array[2]))
+
+        evening_array = self.date_range[1].split(':')
+        if datetime.datetime.today().weekday() == 5:
+            evening_array = [11,0,0]
         date_evening = datetime.datetime.now().replace(
             hour=int(evening_array[0]), minute=int(evening_array[1]), second=int(evening_array[2]))
 
@@ -134,7 +137,7 @@ class CheckInPage(tk.Frame):
 
         self.lbl_feedback.configure(text='')
         self.lbl_feedback.place_forget()
-        self.btn_entrada.place(relx=0.03, rely=0.38, height=224, width=657)
+        self.btn_entrada.place(relx=0.09, rely=0.38, height=224, width=657)
 
     def create_file(self, user):
         '''Method to create the csv file with the info of the user'''
