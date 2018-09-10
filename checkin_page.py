@@ -92,7 +92,7 @@ class CheckInPage(tk.Frame):
         else:
             CheckInPage.checkin = False
             if datetime.datetime.now() <= datetime.datetime.now().replace(hour=17, minute=30, second=0):
-                self.feedback_message = u'\u00BF\u00BFC\u00F3mo??'
+                self.feedback_message = u'\u00BF\u00BFC\u00F3mo??  '
             else:
                 self.feedback_message = 'Gracias: '
             self.btn_entrada.configure(text='Salida', background='red', activebackground='orange red')
@@ -158,7 +158,7 @@ class CheckInPage(tk.Frame):
             f = open(path + filename, 'w')
 
             #escribiendo encabezado
-            f.write('nombre;apellido;dia;tiempo;entrada/salida' + '\n')
+            f.write('nombre;apellido;dia;tiempo;entrada/salida\n')
             f.write(user[2] + ';' + user[3] + ';' +
                     now.strftime('%d/%m/%Y') + ';' +
                     now.strftime('%H:%M:%S') + ';' +

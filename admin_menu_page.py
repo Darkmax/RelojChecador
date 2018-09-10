@@ -8,6 +8,7 @@ except:
     import tkFont as tkfont    #python 2
 
 import checkin_page as checkin
+import delete_user as deletePerson
 import add_person_page as addPerson
 
 class AdminMenuPage(tk.Frame):
@@ -30,7 +31,7 @@ class AdminMenuPage(tk.Frame):
         lbl_title = tk.Label(self, text='Elige una opción:', font=AdminMenuPage.arial40)
         lbl_title.place(relx=0.17, rely=0.05, height=91, width=484)
 
-        btn_delUser = tk.Button(self, text='Remover\nPersona', font=AdminMenuPage.arial40, background='red', foreground='white', command=lambda: self.master.switch_frame())
+        btn_delUser = tk.Button(self, text='Remover\nPersona', font=AdminMenuPage.arial40, background='red', foreground='white', command=lambda: self.master.switch_frame(deletePerson.DeleteUserPage))
         btn_delUser.place(relx=0.06, rely=0.33, height=250, width=300)
 
         btn_addUser = tk.Button(self, text='Agregar\nPersona', font=AdminMenuPage.arial40, background='green', activebackground='green2', command=lambda: self.master.switch_frame(addPerson.addPersonPage))

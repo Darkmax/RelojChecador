@@ -56,6 +56,19 @@ class Backend:
         else:
             return 'error'
 
+    def getUsers(self, name=''):
+        '''Method to get all users or only filtered by name'''
+        try:
+            query = 'SELECT * FROM Users'
+            if name:
+                query += " WHERE name='" + name + "' order by name ASC"
+            self.c.execute(query)
+
+            return self.c.fetchall()
+
+        except Exception as e:
+            print('Exception message: ' + str(e))
+
     def addPerson(self, values):
         '''Method to insert person on to the DB'''
         try:
@@ -66,6 +79,23 @@ class Backend:
             query = 'INSERT INTO Users (name, last_name, index_finger, index_finger2) VALUES (?, ?, ?, ?)'
             self.c.execute(query, (name, last_name, index_finger, index_finger2))
             self.conn.commit() #insert values
+
+            return True
+        except Exception as e:
+            print('Exception message: ' + str(e))
+            return False
+
+    def delUser(self, list_users):
+        '''Method to delete a user from the db
+        Receives: A list of users to delete
+        '''
+        try:
+            query = 'DELETE FROM Users WHERE idUser = ?'
+            for user in list_users:
+                self.c.execute(query, user[0])  # borrando el usuario
+                self.deleteFinger(user[3])  # borrando primera huella
+                self.deleteFinger(user[4])  # borrando segunda huella
+                self.c.execute()
 
             return True
         except Exception as e:
@@ -86,7 +116,6 @@ class Backend:
             ##Si encontro el usuario
             if accuracyScore >= 50:
                 user = self.get_user(positionNumber)
-                print(user)
                 return [True,] + user
             ##No encontro el usuario
             else:
