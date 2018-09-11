@@ -154,13 +154,13 @@ class CheckInPage(tk.Frame):
 
 
             #construyo el nombre del archivo
-            filename = date_string + 'T' + time_string + '_' + str(user[1]) + '.csv'
-            f = open(path + filename, 'w')
+            filename = date_string + '_' + entrada + '_' + str(user[1]) + '.csv'
+            f = open(path + '/' + filename, 'w')
 
             #escribiendo encabezado
-            f.write('nombre;apellido;dia;tiempo;entrada/salida\n')
+            f.write('nombre;apellido;dia;tiempo;entrada/salida\r\n')
             f.write(user[2] + ';' + user[3] + ';' +
                     now.strftime('%d/%m/%Y') + ';' +
                     now.strftime('%H:%M:%S') + ';' +
-                    entrada + '\n')
+                    entrada + '\r\n')
             f.close()
