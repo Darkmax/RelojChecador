@@ -148,7 +148,7 @@ class CheckInPage(tk.Frame):
             now = datetime.datetime.now()
 
             date_string = now.strftime('%Y-%m-%d')
-            time_string = now.strftime('%H%M%S')
+            # time_string = now.strftime('%H%M%S')
             entrada = 'entrada' if CheckInPage.checkin else 'salida'
             path = self.b.getExportPath()
 
@@ -158,9 +158,9 @@ class CheckInPage(tk.Frame):
             f = open(path + '/' + filename, 'w')
 
             #escribiendo encabezado
-            f.write('nombre;apellido;dia;tiempo;entrada/salida\r\n')
-            f.write(user[2] + ';' + user[3] + ';' +
+            f.write('idUser;nombre;apellido;dia;tiempo;entrada/salida\r\n')
+            f.write(str(user[1]) + ';' + user[2] + ';' + user[3] + ';' +
                     now.strftime('%d/%m/%Y') + ';' +
                     now.strftime('%H:%M:%S') + ';' +
-                    entrada + '\r\n')
+                    entrada)
             f.close()
